@@ -1,9 +1,9 @@
 /**********************************
-2048Ğ¡ÓÎÏ·v1.2°æ±¾ 
-Ôö¼ÓÁË2048AI ÓÎÏ·Ê¤Àû½çÃæ 
-bug:µÚÈı´ÎÔËĞĞ³ÌĞòÊ±×î¼Ñ·ÖÊı»á¹é0 
-×÷Õß£ºÁõ¿µ¼ø
-ÈÕÆÚ£º2022/7/7
+2048å°æ¸¸æˆv1.2ç‰ˆæœ¬ 
+å¢åŠ äº†2048AI æ¸¸æˆèƒœåˆ©ç•Œé¢ 
+bug:ç¬¬ä¸‰æ¬¡è¿è¡Œç¨‹åºæ—¶æœ€ä½³åˆ†æ•°ä¼šå½’0 
+ä½œè€…ï¼šPeanutSplash
+æ—¥æœŸï¼š2022/7/7
 **********************************/
 #include "acllib.h"
 #include <stdio.h>
@@ -11,46 +11,46 @@ bug:µÚÈı´ÎÔËĞĞ³ÌĞòÊ±×î¼Ñ·ÖÊı»á¹é0
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#define random(x) (rand()%x) //Ëæ»ú²úÉú[0-x)µÄÕûÊı 
+#define random(x) (rand()%x) //éšæœºäº§ç”Ÿ[0-x)çš„æ•´æ•° 
 #define LENGTH 100
 #define false 0
 #define SIZE 4
-/*È«¾Ö±äÁ¿*/
-struct images{//Í¼Æ¬½á¹¹Ìå 
-	ACL_Image block_0;//Êı×Ö0¼´¿Õ·½¿é 
-	ACL_Image block_2;//Êı×Ö2 
-	ACL_Image block_4;//Êı×Ö4 
-	ACL_Image block_8;//Êı×Ö8 
-	ACL_Image block_16;//Êı×Ö16 
-	ACL_Image block_32;//Êı×Ö32 
-	ACL_Image block_64;//Êı×Ö64 
-	ACL_Image block_128;//Êı×Ö128 
-	ACL_Image block_256;//Êı×Ö256 
-	ACL_Image block_512;//Êı×Ö512 
-	ACL_Image block_1024;//Êı×Ö1024 
-	ACL_Image block_2048;//Êı×Ö2048 
-	ACL_Image background;//±³¾°É« 
+/*å…¨å±€å˜é‡*/
+struct images{//å›¾ç‰‡ç»“æ„ä½“ 
+	ACL_Image block_0;//æ•°å­—0å³ç©ºæ–¹å— 
+	ACL_Image block_2;//æ•°å­—2 
+	ACL_Image block_4;//æ•°å­—4 
+	ACL_Image block_8;//æ•°å­—8 
+	ACL_Image block_16;//æ•°å­—16 
+	ACL_Image block_32;//æ•°å­—32 
+	ACL_Image block_64;//æ•°å­—64 
+	ACL_Image block_128;//æ•°å­—128 
+	ACL_Image block_256;//æ•°å­—256 
+	ACL_Image block_512;//æ•°å­—512 
+	ACL_Image block_1024;//æ•°å­—1024 
+	ACL_Image block_2048;//æ•°å­—2048 
+	ACL_Image background;//èƒŒæ™¯è‰² 
 	ACL_Image over;//gameover
-	ACL_Image backgound_color;//´ó±³¾°É« 
-	ACL_Image restart;//ÖØÊÔ 
-	ACL_Image restart_hover;//ÖØÊÔ(after)
-	ACL_Image score;//·ÖÊı
-	ACL_Image score_background;//ÓÃÓÚÌî³ä·ÖÊıµÄ±³¾° 
-	ACL_Image bestscore;//×î¸ßµÃ·Ö 
-	ACL_Image win;//Ê¤Àû 
-	ACL_Image newgame;//ĞÂÓÎÏ·
-	ACL_Image newgame_hover;//ĞÂÓÎÏ·£¨after£© 
+	ACL_Image backgound_color;//å¤§èƒŒæ™¯è‰² 
+	ACL_Image restart;//é‡è¯• 
+	ACL_Image restart_hover;//é‡è¯•(after)
+	ACL_Image score;//åˆ†æ•°
+	ACL_Image score_background;//ç”¨äºå¡«å……åˆ†æ•°çš„èƒŒæ™¯ 
+	ACL_Image bestscore;//æœ€é«˜å¾—åˆ† 
+	ACL_Image win;//èƒœåˆ© 
+	ACL_Image newgame;//æ–°æ¸¸æˆ
+	ACL_Image newgame_hover;//æ–°æ¸¸æˆï¼ˆafterï¼‰ 
 }IMAGES;
-int Array[4][4]={0};//´ú±í2048µÄ¶şÎ¬Êı×é 
-int score=0;//µÃ·Ö 
-int maxScore=-1;//×î¸ßµÃ·Ö  
-int ArrayStatus=0;//0±íÊ¾³õÊ¼»¯½çÃæ 1Îªgameover½çÃæ 2ÎªÊ¤Àû½çÃæ 
-int depthMAX; //×îÉî³¤¶È 
-int node;//½Úµã 
-int bestChoose;//×î¼ÑÂ·¾¶ 
-/*º¯ÊıÊµÏÖ*/
-/*¹¦ÄÜ·½Ãæº¯Êı*/
-void LoadAllImages(){//¼ÓÔØËùÓĞÍ¼Æ¬ 
+int Array[4][4]={0};//ä»£è¡¨2048çš„äºŒç»´æ•°ç»„ 
+int score=0;//å¾—åˆ† 
+int maxScore=-1;//æœ€é«˜å¾—åˆ†  
+int ArrayStatus=0;//0è¡¨ç¤ºåˆå§‹åŒ–ç•Œé¢ 1ä¸ºgameoverç•Œé¢ 2ä¸ºèƒœåˆ©ç•Œé¢ 
+int depthMAX; //æœ€æ·±é•¿åº¦ 
+int node;//èŠ‚ç‚¹ 
+int bestChoose;//æœ€ä½³è·¯å¾„ 
+/*å‡½æ•°å®ç°*/
+/*åŠŸèƒ½æ–¹é¢å‡½æ•°*/
+void LoadAllImages(){//åŠ è½½æ‰€æœ‰å›¾ç‰‡ 
 	loadImage("image/block_0.jpg" , &IMAGES.block_0 );
 	loadImage("image/block_2.jpg" , &IMAGES.block_2 );
 	loadImage("image/block_4.jpg" , &IMAGES.block_4 );
@@ -75,18 +75,18 @@ void LoadAllImages(){//¼ÓÔØËùÓĞÍ¼Æ¬
 	loadImage("image/newgame.jpg" , &IMAGES.newgame );
 	loadImage("image/newgame_hover.jpg" , &IMAGES.newgame_hover );
 }
-void paintNumber(int x,int y,int TextSize,ACL_Color TextColor,ACL_Color TextBkColor, char num[]){//»­Êı×Ö 	²ÎÊı£ºx×ø±ê y×ø±ê ×ÖÌå´óĞ¡ ×ÖÌåÑÕÉ« ÒªÊä³öµÄÎÄ×Ö 
+void paintNumber(int x,int y,int TextSize,ACL_Color TextColor,ACL_Color TextBkColor, char num[]){//ç”»æ•°å­— 	å‚æ•°ï¼šxåæ ‡ yåæ ‡ å­—ä½“å¤§å° å­—ä½“é¢œè‰² è¦è¾“å‡ºçš„æ–‡å­— 
     beginPaint();
-    setTextSize(TextSize);//ÉèÖÃ×ÖÌå´óĞ¡ 
-    setTextColor(TextColor);//ÉèÖÃ×ÖÌåÑÕÉ« 
-    setTextBkColor(TextBkColor);//ÉèÖÃ±³¾° 
-    paintText(x,y,num);//Êä³ö×ÖÌå
+    setTextSize(TextSize);//è®¾ç½®å­—ä½“å¤§å° 
+    setTextColor(TextColor);//è®¾ç½®å­—ä½“é¢œè‰² 
+    setTextBkColor(TextBkColor);//è®¾ç½®èƒŒæ™¯ 
+    paintText(x,y,num);//è¾“å‡ºå­—ä½“
     endPaint();
 }
-void paintFrame(){	//³õÊ¼»¯½çÃæ  
+void paintFrame(){	//åˆå§‹åŒ–ç•Œé¢  
 	int i,j;
-	/*³õÊ¼»¯Êı¾İ*/
-	initConsole ();//ÆôÓÃÖÕ¶Ë
+	/*åˆå§‹åŒ–æ•°æ®*/
+	initConsole ();//å¯ç”¨ç»ˆç«¯
 	for(i=0;i<SIZE;i++){
 		for(j=0;j<SIZE;j++){
 			Array[i][j]=0;
@@ -94,81 +94,81 @@ void paintFrame(){	//³õÊ¼»¯½çÃæ
 	}
 	score=0;
 	ArrayStatus=0;
-	getMaxScore();//¶ÁÈ¡×î´óµÃ·Ö
-	/*»­±³¾°*/ 
+	getMaxScore();//è¯»å–æœ€å¤§å¾—åˆ†
+	/*ç”»èƒŒæ™¯*/ 
 	beginPaint();
 		putImage(&IMAGES.backgound_color,0,0);
-    	putImage(&IMAGES.background,25,130);//ÉÏ°ë²¿·Ö150pxÎª¼Æ·Ö°å£¬×óÓÒ25pxÎªÁ½±ß¼äÏ¶ 
-    	putImage(&IMAGES.score,315,18);//·ÖÊı·½¿é 
-    	putImage(&IMAGES.bestscore,400,18);//×î¸ß·ÖÊı·½¿é 
+    	putImage(&IMAGES.background,25,130);//ä¸ŠåŠéƒ¨åˆ†150pxä¸ºè®¡åˆ†æ¿ï¼Œå·¦å³25pxä¸ºä¸¤è¾¹é—´éš™ 
+    	putImage(&IMAGES.score,315,18);//åˆ†æ•°æ–¹å— 
+    	putImage(&IMAGES.bestscore,400,18);//æœ€é«˜åˆ†æ•°æ–¹å— 
     endPaint();
     paintNumber(35,5,86,RGB(119,110,101),RGB(251,248,241),"2048");
-    paintNumber(30,95,24,RGB(119,110,101),RGB(251,248,241),"ºÏ²¢Êı×Öµ½´ï2048£¡");
+    paintNumber(30,95,24,RGB(119,110,101),RGB(251,248,241),"åˆå¹¶æ•°å­—åˆ°è¾¾2048ï¼");
     paintNumber(347,52,24,RGB(255,255,254),RGB(188,172,159),"0");
     paintMaxScoreNum();
 	paintBlock();
     paintFirstBlock();
 }
-void paintFirstBlock(){//¿ª¾ÖËæ»úÉú³ÉÁ½¸öÊı×Ö·½¿é 
+void paintFirstBlock(){//å¼€å±€éšæœºç”Ÿæˆä¸¤ä¸ªæ•°å­—æ–¹å— 
 	int i,j;
 	int randomx[4]; 
 	while(1){
 		for(i=0;i<4;i++){
-			randomx[i]=random(4);//Éú³É¶şÎ¬Êı×éÖĞµÄËæ»ú×ø±ê 
+			randomx[i]=random(4);//ç”ŸæˆäºŒç»´æ•°ç»„ä¸­çš„éšæœºåæ ‡ 
 		}
-		if(randomx[0]==randomx[2]&&randomx[1]==randomx[3]) continue;//Á½¸öÉú³ÉµÄÊı×Ö·½¿éÖØºÏÁË 
+		if(randomx[0]==randomx[2]&&randomx[1]==randomx[3]) continue;//ä¸¤ä¸ªç”Ÿæˆçš„æ•°å­—æ–¹å—é‡åˆäº† 
 		else break;	
 	} 
-	Array[randomx[0]][randomx[1]]=2;//ÓĞÒ»¸ö·½¿éÎª2 
+	Array[randomx[0]][randomx[1]]=2;//æœ‰ä¸€ä¸ªæ–¹å—ä¸º2 
 	Array[randomx[2]][randomx[3]]=blockGeneration();
     paintBlock();
 }
-void keyboardEvent(int key,int event){//°ó¶¨¼üÅÌÊÂ¼ş  ²ÎÊı£º°´¼ü ¼üÅÌÊÂ¼ş 
-	int iseffect; //ÊÇ·ñÎªÓĞĞ§²Ù×÷
+void keyboardEvent(int key,int event){//ç»‘å®šé”®ç›˜äº‹ä»¶  å‚æ•°ï¼šæŒ‰é”® é”®ç›˜äº‹ä»¶ 
+	int iseffect; //æ˜¯å¦ä¸ºæœ‰æ•ˆæ“ä½œ
     if(event!=KEY_DOWN)
         return;
-    if(isOver(Array)){  //ÅĞ¶ÏÊÇ·ñÓÎÏ·½áÊø£¬Èô½áÊøÔòÊä³ö½áÊøĞÅÏ¢²¢ÍË³öÑ­»·
-    	printf("ÒÑÂú!\n");
+    if(isOver(Array)){  //åˆ¤æ–­æ˜¯å¦æ¸¸æˆç»“æŸï¼Œè‹¥ç»“æŸåˆ™è¾“å‡ºç»“æŸä¿¡æ¯å¹¶é€€å‡ºå¾ªç¯
+    	printf("å·²æ»¡!\n");
 		return;
 	}else if(isWin(Array)){
-		printf("Ê¤Àû!\n");
+		printf("èƒœåˆ©!\n");
 		return;
 	}
     switch(key)
     {
     case 0x57://W
     case VK_UP:
-			iseffect = upMove(Array);//ÏòÉÏÒÆ¶¯ 
+			iseffect = upMove(Array);//å‘ä¸Šç§»åŠ¨ 
         break;
     case 0x53://S
     case VK_DOWN:
-			iseffect = downMove(Array);//ÏòÏÂÒÆ¶¯ 
+			iseffect = downMove(Array);//å‘ä¸‹ç§»åŠ¨ 
         break;
     case 0x41://A
     case VK_LEFT:
-    		iseffect = leftMove(Array);//Ïò×óÒÆ¶¯ 
+    		iseffect = leftMove(Array);//å‘å·¦ç§»åŠ¨ 
         break;
     case 0x44://D
     case VK_RIGHT:
-   	 		iseffect = rightMove(Array);//ÏòÓÒÒÆ¶¯ 
+   	 		iseffect = rightMove(Array);//å‘å³ç§»åŠ¨ 
         break;
-    case 0x42 ://AIÄ£Ê½ 
-		startTimer(0,10);//¿ªÊ¼¼ÆÊ±Æ÷ÔËĞĞ 
+    case 0x42 ://AIæ¨¡å¼ 
+		startTimer(0,10);//å¼€å§‹è®¡æ—¶å™¨è¿è¡Œ 
     }
-    if(iseffect) nextStep(); //ÈôÎªÓĞĞ§²Ù×÷£¬Ö´ĞĞÏÂÒ»²½º¯Êı
+    if(iseffect) nextStep(); //è‹¥ä¸ºæœ‰æ•ˆæ“ä½œï¼Œæ‰§è¡Œä¸‹ä¸€æ­¥å‡½æ•°
 }
-void timerEvent(int tid){//¼ÆÊ±Æ÷ÊÂ¼ş 
+void timerEvent(int tid){//è®¡æ—¶å™¨äº‹ä»¶ 
 	if(StratAI(Array)==1||printArrayNumInConsole()==1){
-		cancelTimer(0);//µ±Êı×éÂúÊ±»ò³öÏÖ2048Ê±Í£Ö¹ÔËĞĞ 
+		cancelTimer(0);//å½“æ•°ç»„æ»¡æ—¶æˆ–å‡ºç°2048æ—¶åœæ­¢è¿è¡Œ 
 	}
-	nextStep();//ÏÂÒ»²½²Ù×÷ 
+	nextStep();//ä¸‹ä¸€æ­¥æ“ä½œ 
 }
-int printArrayNumInConsole(){//Êä³ö¶şÎ¬Êı×éµÄÊı¾İÔÚÖÕ¶Ë 
+int printArrayNumInConsole(){//è¾“å‡ºäºŒç»´æ•°ç»„çš„æ•°æ®åœ¨ç»ˆç«¯ 
 	int i,j;
 	for(i=0;i<4;i++){
 		for(j=0;j<4;j++){
 			//printf("%d\t",Array[i][j]);
-			if(Array[i][j]==2048) {//µ±³öÏÖ2048·µ»Ø1 
+			if(Array[i][j]==2048) {//å½“å‡ºç°2048è¿”å›1 
 				return 1;
 			}
 		}
@@ -176,65 +176,65 @@ int printArrayNumInConsole(){//Êä³ö¶şÎ¬Êı×éµÄÊı¾İÔÚÖÕ¶Ë
 	}
 		//printf("\n");
 }
-void mouseEvent(int x,int y,int bt,int event){//Êó±êÊÂ¼ş ²ÎÊı£ºx×ø±ê y×ø±ê °´¼ü ÊÂ¼ş 
+void mouseEvent(int x,int y,int bt,int event){//é¼ æ ‡äº‹ä»¶ å‚æ•°ï¼šxåæ ‡ yåæ ‡ æŒ‰é”® äº‹ä»¶ 
 	if(ArrayStatus==1||ArrayStatus==2){
 		if(event==BUTTON_DOWN){
 			if(bt==LEFT_BUTTON){
-       	 		paintOutNum(x,y);//Êó±êµã»÷ÊÂ¼ş 
+       	 		paintOutNum(x,y);//é¼ æ ‡ç‚¹å‡»äº‹ä»¶ 
       	 	}
  	   }
-    	paintDownBlock(x,y);//Êó±êÒÆ¶¯µ½Ä³ÇøÓòÊÂ¼ş 
+    	paintDownBlock(x,y);//é¼ æ ‡ç§»åŠ¨åˆ°æŸåŒºåŸŸäº‹ä»¶ 
 	}
 }
 int Setup(){
     initWindow("2048",DEFAULT,DEFAULT,550,650);
     LoadAllImages();
     paintFrame();
-    registerKeyboardEvent(keyboardEvent);//¼üÅÌÊÂ¼ş  
-    registerTimerEvent(timerEvent);//¼ÆÊ±Æ÷ 
+    registerKeyboardEvent(keyboardEvent);//é”®ç›˜äº‹ä»¶  
+    registerTimerEvent(timerEvent);//è®¡æ—¶å™¨ 
     return 0;
 }
-void paintOutNum(int x,int y){// µã»÷ÊÂ¼ş	x×ø±êy×ø±ê 
+void paintOutNum(int x,int y){// ç‚¹å‡»äº‹ä»¶	xåæ ‡yåæ ‡ 
 	if(ArrayStatus==1){
-		if(x> 223&&x<314&&y>430&&y<480){//µã»÷ÖØÊÔ°´Å¥µÄÇøÓò 
-			printf("ÖØÊÔ!\n");
-			paintFrame();//³õÊ¼»¯ 
+		if(x> 223&&x<314&&y>430&&y<480){//ç‚¹å‡»é‡è¯•æŒ‰é’®çš„åŒºåŸŸ 
+			printf("é‡è¯•!\n");
+			paintFrame();//åˆå§‹åŒ– 
 		}
 	}
 	else if(ArrayStatus==2){
-		if(x> 223&&x<314&&y>480&&y<530){//µã»÷ÖØÊÔ°´Å¥µÄÇøÓò 
-			printf("ĞÂÓÎÏ·!\n");
-			paintFrame();//³õÊ¼»¯ 
+		if(x> 223&&x<314&&y>480&&y<530){//ç‚¹å‡»é‡è¯•æŒ‰é’®çš„åŒºåŸŸ 
+			printf("æ–°æ¸¸æˆ!\n");
+			paintFrame();//åˆå§‹åŒ– 
 		}
 	}
 }
-void paintDownBlock(int x,int y){//Êó±êÒÆ¶¯µ½Ä³ÇøÓòµÄÊÂ¼ş	²ÎÊı£ºx×ø±êy×ø±ê 
+void paintDownBlock(int x,int y){//é¼ æ ‡ç§»åŠ¨åˆ°æŸåŒºåŸŸçš„äº‹ä»¶	å‚æ•°ï¼šxåæ ‡yåæ ‡ 
 		beginPaint();
 		if(ArrayStatus==1){
-			if(x>223&&x<314&&y>430&&y<480){//Êó±êÒÆ¶¯µ½°´Å¥µÄÇøÓò 
-				putImage(&IMAGES.restart_hover,225,430);//ÖØÊÔ°´Å¥(After)
+			if(x>223&&x<314&&y>430&&y<480){//é¼ æ ‡ç§»åŠ¨åˆ°æŒ‰é’®çš„åŒºåŸŸ 
+				putImage(&IMAGES.restart_hover,225,430);//é‡è¯•æŒ‰é’®(After)
 			}
 			else{
 				putImage(&IMAGES.restart,225,430);
 			}
 		} 
 		else if(ArrayStatus==2){
-			if(x>223&&x<314&&y>480&&y<530){//Êó±êÒÆ¶¯µ½°´Å¥µÄÇøÓò 
-				putImage(&IMAGES.newgame_hover,225,480);//ĞÂÓÎÏ·°´Å¥(After)
-				printf("ÒÑ»æ»­ĞÂÓÎÏ·°´Å¥£¡(After)\n");
+			if(x>223&&x<314&&y>480&&y<530){//é¼ æ ‡ç§»åŠ¨åˆ°æŒ‰é’®çš„åŒºåŸŸ 
+				putImage(&IMAGES.newgame_hover,225,480);//æ–°æ¸¸æˆæŒ‰é’®(After)
+				printf("å·²ç»˜ç”»æ–°æ¸¸æˆæŒ‰é’®ï¼(After)\n");
 				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 			else{
-				putImage(&IMAGES.newgame,225,480);//ĞÂÓÎÏ·°´Å¥
-				printf("ÒÑ»æ»­ĞÂÓÎÏ·°´Å¥£¡\n");
+				putImage(&IMAGES.newgame,225,480);//æ–°æ¸¸æˆæŒ‰é’®
+				printf("å·²ç»˜ç”»æ–°æ¸¸æˆæŒ‰é’®ï¼\n");
 				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 		}
 			endPaint();
 }
-void outPutNumBlock(int i,int j){//ÓÃÓÚ¸ù¾İÊı×ÖÊä³ö¶ÔÓ¦µÄÊı×Ö·½¿é	²ÎÊı£ºĞĞºÍÁĞ 
+void outPutNumBlock(int i,int j){//ç”¨äºæ ¹æ®æ•°å­—è¾“å‡ºå¯¹åº”çš„æ•°å­—æ–¹å—	å‚æ•°ï¼šè¡Œå’Œåˆ— 
 	if(Array[i][j]==0){
-    	putImage(&IMAGES.block_0,45+j*(LENGTH+20),150+i*(LENGTH+20));//Ã¿¸öÊı×Ö·½¿éÖ®¼ä¼ä¸ô20£¬Êı×Ö·½¿é´óĞ¡Îª100*100 
+    	putImage(&IMAGES.block_0,45+j*(LENGTH+20),150+i*(LENGTH+20));//æ¯ä¸ªæ•°å­—æ–¹å—ä¹‹é—´é—´éš”20ï¼Œæ•°å­—æ–¹å—å¤§å°ä¸º100*100 
     }
 	else if(Array[i][j]==2){
 		putImage(&IMAGES.block_2,45+j*(LENGTH+20),150+i*(LENGTH+20));
@@ -270,31 +270,31 @@ void outPutNumBlock(int i,int j){//ÓÃÓÚ¸ù¾İÊı×ÖÊä³ö¶ÔÓ¦µÄÊı×Ö·½¿é	²ÎÊı£ºĞĞºÍÁĞ
 		putImage(&IMAGES.block_2048,45+j*(LENGTH+20),150+i*(LENGTH+20));
 	}
 }
-void getMaxScore(){//´ÓÎÄ¼ş¶ÁÈ¡×î¼Ñ·ÖÊı 
-	char StrLine[20];  //Ã¿ĞĞ×î´ó¶ÁÈ¡µÄ×Ö·ûÊı
+void getMaxScore(){//ä»æ–‡ä»¶è¯»å–æœ€ä½³åˆ†æ•° 
+	char StrLine[20];  //æ¯è¡Œæœ€å¤§è¯»å–çš„å­—ç¬¦æ•°
     FILE * fp = fopen("score.txt", "r");
-    fgets(StrLine,sizeof(StrLine),fp);  //¶ÁÈ¡Ò»ĞĞ
+    fgets(StrLine,sizeof(StrLine),fp);  //è¯»å–ä¸€è¡Œ
     maxScore=atoi(StrLine);
     return ;
 }
-void saveMaxScore(){//±£´æ×î´ó·ÖÊıµ½ÎÄ¼ş 
+void saveMaxScore(){//ä¿å­˜æœ€å¤§åˆ†æ•°åˆ°æ–‡ä»¶ 
 	char scoreStr[20];
 	char maxScoreStr[20];
-	itoa(score, scoreStr, 10);//maxScore×ª»¯³É×Ö·ûĞÍ´æÈëstr 10½øÖÆ 
+	itoa(score, scoreStr, 10);//maxScoreè½¬åŒ–æˆå­—ç¬¦å‹å­˜å…¥str 10è¿›åˆ¶ 
 	FILE *fp1;
 	fp1 = fopen("score.txt","w+"); 
-	if(fp1!=NULL){    //ÎÄ¼şÒÑ¾­´´½¨  ÔòÉ¾³ıÒ»ĞĞ
-		int currentScore=atoi(scoreStr);//µ±Ç°µÃ·Ö 
-		if(maxScore<currentScore){//µ±ÎÄ¼şÖĞµÄÊı×Ö±Èµ±Ç°µÃ·ÖĞ¡Ê±²ÅĞ´Èë 
+	if(fp1!=NULL){    //æ–‡ä»¶å·²ç»åˆ›å»º  åˆ™åˆ é™¤ä¸€è¡Œ
+		int currentScore=atoi(scoreStr);//å½“å‰å¾—åˆ† 
+		if(maxScore<currentScore){//å½“æ–‡ä»¶ä¸­çš„æ•°å­—æ¯”å½“å‰å¾—åˆ†å°æ—¶æ‰å†™å…¥ 
 			maxScore=currentScore;
-			itoa(maxScore, maxScoreStr, 10);//maxScore×ª»¯³É×Ö·ûĞÍ´æÈëstr 10½øÖÆ 
+			itoa(maxScore, maxScoreStr, 10);//maxScoreè½¬åŒ–æˆå­—ç¬¦å‹å­˜å…¥str 10è¿›åˆ¶ 
 			fputs(maxScoreStr,fp1);
 			paintMaxScoreNum();
 		}	
 	}
 	fclose(fp1);
 }
-void paintBlock(){//´òÓ¡Êı×Ö·½¿é 
+void paintBlock(){//æ‰“å°æ•°å­—æ–¹å— 
 	int i,j;
 	beginPaint();
 	for(i=0;i<SIZE;i++){
@@ -304,7 +304,7 @@ void paintBlock(){//´òÓ¡Êı×Ö·½¿é
     }
 	endPaint();
 }
-void deleteScreen(){//Çå³ıÆÁÄ» 
+void deleteScreen(){//æ¸…é™¤å±å¹• 
 	int i,j;
 	beginPaint();
 	for(i=0;i<SIZE;i++){
@@ -314,13 +314,13 @@ void deleteScreen(){//Çå³ıÆÁÄ»
     }
 	endPaint();
 }
-/*Ëã·¨·½Ãæº¯Êı*/
-int blockGeneration(){//¿ØÖÆÉú³É2ºÍ4µÄ¸ÅÂÊ 
-	int x=random(10);//Ëæ»ú²úÉú[0-10)µÄÕûÊı
+/*ç®—æ³•æ–¹é¢å‡½æ•°*/
+int blockGeneration(){//æ§åˆ¶ç”Ÿæˆ2å’Œ4çš„æ¦‚ç‡ 
+	int x=random(10);//éšæœºäº§ç”Ÿ[0-10)çš„æ•´æ•°
 	if(x<2) return 4;
 	else if(x>=2&&x<10) return 2;
 }
-int getNumDigits(int num){//ÅĞ¶ÏÒ»¸öÕûÊıÓĞ¶àÉÙÎ» ²ÎÊı£ºÒªÅĞ¶ÏµÄÕûĞÎÊı×Ö 
+int getNumDigits(int num){//åˆ¤æ–­ä¸€ä¸ªæ•´æ•°æœ‰å¤šå°‘ä½ å‚æ•°ï¼šè¦åˆ¤æ–­çš„æ•´å½¢æ•°å­— 
 	int digits=0;
 	while(num!=0){
         num/=10;
@@ -328,10 +328,10 @@ int getNumDigits(int num){//ÅĞ¶ÏÒ»¸öÕûÊıÓĞ¶àÉÙÎ» ²ÎÊı£ºÒªÅĞ¶ÏµÄÕûĞÎÊı×Ö
     }
     return digits;
 }
-void paintScoreNum(){//Êä³öµÃ·ÖÊı×Ö 
-	char str[20];//ÓÃÓÚ´æ·Å×ª»¯³É×Ö·ûĞÍµÄscore 
-	itoa(score, str, 10);//score×ª»¯³É×Ö·ûĞÍ´æÈëstr 10½øÖÆ 
-   	switch (getNumDigits(score)){//²»Í¬Î»Êı»­µÄÆğÊ¼Î»ÖÃ²»Ò»Ñù 
+void paintScoreNum(){//è¾“å‡ºå¾—åˆ†æ•°å­— 
+	char str[20];//ç”¨äºå­˜æ”¾è½¬åŒ–æˆå­—ç¬¦å‹çš„score 
+	itoa(score, str, 10);//scoreè½¬åŒ–æˆå­—ç¬¦å‹å­˜å…¥str 10è¿›åˆ¶ 
+   	switch (getNumDigits(score)){//ä¸åŒä½æ•°ç”»çš„èµ·å§‹ä½ç½®ä¸ä¸€æ · 
    		case 1:paintNumber(347,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
 		case 2:paintNumber(342,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
 		case 3:paintNumber(335,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
@@ -339,10 +339,10 @@ void paintScoreNum(){//Êä³öµÃ·ÖÊı×Ö
 		case 5:paintNumber(322,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
    	}
 }
-void paintMaxScoreNum(){//Êä³ö×î´óµÃ·ÖÊı×Ö 
-	char str1[20];//ÓÃÓÚ´æ·Å×ª»¯³É×Ö·ûĞÍµÄmaxScore 
-	itoa(maxScore, str1, 10);//score×ª»¯³É×Ö·ûĞÍ´æÈëstr1 10½øÖÆ 
-	switch (getNumDigits(maxScore)){//»­×î¸ßµÃ·ÖµÄ 
+void paintMaxScoreNum(){//è¾“å‡ºæœ€å¤§å¾—åˆ†æ•°å­— 
+	char str1[20];//ç”¨äºå­˜æ”¾è½¬åŒ–æˆå­—ç¬¦å‹çš„maxScore 
+	itoa(maxScore, str1, 10);//scoreè½¬åŒ–æˆå­—ç¬¦å‹å­˜å…¥str1 10è¿›åˆ¶ 
+	switch (getNumDigits(maxScore)){//ç”»æœ€é«˜å¾—åˆ†çš„ 
    		case 1:paintNumber(460,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
 		case 2:paintNumber(455,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
 		case 3:paintNumber(448,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
@@ -350,23 +350,23 @@ void paintMaxScoreNum(){//Êä³ö×î´óµÃ·ÖÊı×Ö
 		case 5:paintNumber(435,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
    	}
 } 
-void controlInEachUnit(int *unit){//¶ÔÊı×é½øĞĞ¼ÓºÍÍÆ¸ñ	
+void controlInEachUnit(int *unit){//å¯¹æ•°ç»„è¿›è¡ŒåŠ å’Œæ¨æ ¼	
 	int i,j;
-	//¼ÓºÍ
-	int point=0; //Ö¸¶¨¸ñ
+	//åŠ å’Œ
+	int point=0; //æŒ‡å®šæ ¼
 	for( i=1;i<SIZE;i++){
-		if(unit[i]==0) continue; //Èç¹ûÓĞ¿Õ¸ñ×Ó£¬±È½ÏÏÂÒ»¸ñÓëÖ¸¶¨¸ñ
-		else if(unit[i]==unit[point]){ //·ñÔò£¬Ö»ÓëÇ°Ò»¸ñ±È½Ï
+		if(unit[i]==0) continue; //å¦‚æœæœ‰ç©ºæ ¼å­ï¼Œæ¯”è¾ƒä¸‹ä¸€æ ¼ä¸æŒ‡å®šæ ¼
+		else if(unit[i]==unit[point]){ //å¦åˆ™ï¼Œåªä¸å‰ä¸€æ ¼æ¯”è¾ƒ
 			unit[point]*=2;
 			unit[i]=0;
-			//³öÏÖÕıÈ·ÒÆ¶¯£¬¼Ó·Ö
+			//å‡ºç°æ­£ç¡®ç§»åŠ¨ï¼ŒåŠ åˆ†
 			score+=unit[point];
 			saveMaxScore();
 			paintScoreNum();
 		}
 		point = i;
 	}
-	//ÍÆ¸ñ
+	//æ¨æ ¼
 	for( i=SIZE-1;i>=0;i--){
 		if(unit[i]==0){
 			for( j=i+1;j<SIZE;j++){
@@ -376,9 +376,9 @@ void controlInEachUnit(int *unit){//¶ÔÊı×é½øĞĞ¼ÓºÍÍÆ¸ñ
 		}
 	}
 }
-void nextStep(){//ÒÆ¶¯ºóµÄÏÂÒ»²½²Ù×÷ 
+void nextStep(){//ç§»åŠ¨åçš„ä¸‹ä¸€æ­¥æ“ä½œ 
 	int i,j;
-	int add_able[SIZE][2];  //¿ÉÒÔ¼ÓµÄ¸ñ×Ó
+	int add_able[SIZE][2];  //å¯ä»¥åŠ çš„æ ¼å­
 	int add_able_num=0;
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
@@ -394,14 +394,14 @@ void nextStep(){//ÒÆ¶¯ºóµÄÏÂÒ»²½²Ù×÷
 		int add_num = blockGeneration();
 		int add_point=random(add_able_num);
 		Array[add_able[add_point][0]][add_able[add_point][1]]=add_num;
-		deleteScreen(); //Çå¿ÕÆÁÄ» 
-    	paintBlock();//»æ»­ÆÁÄ» 
+		deleteScreen(); //æ¸…ç©ºå±å¹• 
+    	paintBlock();//ç»˜ç”»å±å¹• 
 	}
 }
-int upMove(int Array_up[4][4]){//ÏòÉÏÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é  
+int upMove(int Array_up[4][4]){//å‘ä¸Šç§»åŠ¨	å‚æ•°ï¼šè¦æ“ä½œçš„æ•°ç»„  
 	int i,j;
 	int unit[SIZE];
-	int copy_Array[SIZE][SIZE]; //¸´ÖÆÒ»·İ²Ù×÷Ç°µÄ2048Íø¸ñ×÷Îª±¸ÓÃÒÔ±ãºóĞøÅĞ¶ÏÊÇ·ñÎªÓĞĞ§²Ù×÷
+	int copy_Array[SIZE][SIZE]; //å¤åˆ¶ä¸€ä»½æ“ä½œå‰çš„2048ç½‘æ ¼ä½œä¸ºå¤‡ç”¨ä»¥ä¾¿åç»­åˆ¤æ–­æ˜¯å¦ä¸ºæœ‰æ•ˆæ“ä½œ
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
 			copy_Array[i][j]=Array_up[i][j];
@@ -412,19 +412,19 @@ int upMove(int Array_up[4][4]){//ÏòÉÏÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é
 			unit[j]=Array_up[j][i];
 		}
 		controlInEachUnit(unit);
-		//½«²Ù×÷ºóµÄµ¥ÔªÖØĞÂĞ´»Ø2048Íø¸ñ
+		//å°†æ“ä½œåçš„å•å…ƒé‡æ–°å†™å›2048ç½‘æ ¼
 		for( j=0;j<SIZE;j++){
 			Array_up[j][i]=unit[j];
 		}
 	}
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
-			if(copy_Array[i][j]!=Array_up[i][j]) return 1;//²Ù×÷ÓĞĞ§Ê±·µ»Ø1 
+			if(copy_Array[i][j]!=Array_up[i][j]) return 1;//æ“ä½œæœ‰æ•ˆæ—¶è¿”å›1 
 		}
 	}
-	return 0;//ÎŞĞ§·µ»Ø0 
+	return 0;//æ— æ•ˆè¿”å›0 
 }
-int downMove(int Array_down[4][4]){//ÏòÏÂÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é  
+int downMove(int Array_down[4][4]){//å‘ä¸‹ç§»åŠ¨	å‚æ•°ï¼šè¦æ“ä½œçš„æ•°ç»„  
 	int i,j;
 	int unit[SIZE];
 	int ori_table[SIZE][SIZE]; 
@@ -444,19 +444,19 @@ int downMove(int Array_down[4][4]){//ÏòÏÂÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é
 	}
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
-			if(ori_table[i][j]!=Array_down[i][j]) return 1;//²Ù×÷ÓĞĞ§Ê±·µ»Ø1 
+			if(ori_table[i][j]!=Array_down[i][j]) return 1;//æ“ä½œæœ‰æ•ˆæ—¶è¿”å›1 
 		}
 	}
-	return 0;//ÎŞĞ§·µ»Ø0 
+	return 0;//æ— æ•ˆè¿”å›0 
 }
 
-int leftMove(int Array_left[4][4]){//Ïò×óÒÆ¶¯ 	²ÎÊı£ºÒª²Ù×÷µÄÊı×é 
+int leftMove(int Array_left[4][4]){//å‘å·¦ç§»åŠ¨ 	å‚æ•°ï¼šè¦æ“ä½œçš„æ•°ç»„ 
 	int i,j;
 	int unit[SIZE];
 	int ori_table[SIZE][SIZE]; 
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
-			ori_table[i][j]=Array_left[i][j];                                                                                                                            //name:LondonWu  £¨·ÀÎ±ÓÃ£©
+			ori_table[i][j]=Array_left[i][j];                                                                                                                            //name:LondonWu  ï¼ˆé˜²ä¼ªç”¨ï¼‰
 		}
 	}
 	for( i=0;i<SIZE;i++){
@@ -470,12 +470,12 @@ int leftMove(int Array_left[4][4]){//Ïò×óÒÆ¶¯ 	²ÎÊı£ºÒª²Ù×÷µÄÊı×é
 	}
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
-			if(ori_table[i][j]!=Array_left[i][j]) return 1;//²Ù×÷ÓĞĞ§Ê±·µ»Ø1 
+			if(ori_table[i][j]!=Array_left[i][j]) return 1;//æ“ä½œæœ‰æ•ˆæ—¶è¿”å›1 
 		}
 	}
-	return 0;//ÎŞĞ§·µ»Ø0 
+	return 0;//æ— æ•ˆè¿”å›0 
 }
-int rightMove(int Array_right[4][4]){//ÏòÓÒÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é 
+int rightMove(int Array_right[4][4]){//å‘å³ç§»åŠ¨	å‚æ•°ï¼šè¦æ“ä½œçš„æ•°ç»„ 
 	int i,j;
 	int unit[SIZE];
 	int ori_table[SIZE][SIZE];
@@ -495,64 +495,64 @@ int rightMove(int Array_right[4][4]){//ÏòÓÒÒÆ¶¯	²ÎÊı£ºÒª²Ù×÷µÄÊı×é
 	}
 	for( i=0;i<SIZE;i++){
 		for( j=0;j<SIZE;j++){
-			if(ori_table[i][j]!=Array_right[i][j]) return 1;//²Ù×÷ÓĞĞ§Ê±·µ»Ø1 
+			if(ori_table[i][j]!=Array_right[i][j]) return 1;//æ“ä½œæœ‰æ•ˆæ—¶è¿”å›1 
 		}
 	}
-	return 0;//ÎŞĞ§·µ»Ø0 
+	return 0;//æ— æ•ˆè¿”å›0 
 }
-//void paintWin(){//Ê¤Àû½çÃæ 
+//void paintWin(){//èƒœåˆ©ç•Œé¢ 
 //	beginPaint();
 //	putImage(&IMAGES.win,25,130);
-//	putImage(&IMAGES.restart,225,430);//ÖØÊÔ°´Å¥ 
+//	putImage(&IMAGES.restart,225,430);//é‡è¯•æŒ‰é’® 
 //	endPaint();
-//	ArrayStatus=2;//µÚ¶şÖÖÇé¿ö 
+//	ArrayStatus=2;//ç¬¬äºŒç§æƒ…å†µ 
 //}
-int isOver(int Array_judgment[4][4]){//ÅĞÂú  ²ÎÊı£ºÒª´«ÈëµÄÊı×é 
+int isOver(int Array_judgment[4][4]){//åˆ¤æ»¡  å‚æ•°ï¼šè¦ä¼ å…¥çš„æ•°ç»„ 
 	int i,j;
-	for( i=0;i<SIZE;i++){ //ÅĞ¶ÏÓĞÎŞ¿Õ¸ñ×Ó
+	for( i=0;i<SIZE;i++){ //åˆ¤æ–­æœ‰æ— ç©ºæ ¼å­
 		for( j=0;j<SIZE;j++){
 			if(Array_judgment[i][j]==0) return 0;
 		}
 	}
-	for( i=0;i<SIZE;i++){ //ÅĞ¶ÏºáÏòÓĞÎŞÁ¬ĞøÏàÍ¬Êı×Ö¸ñ×Ó
+	for( i=0;i<SIZE;i++){ //åˆ¤æ–­æ¨ªå‘æœ‰æ— è¿ç»­ç›¸åŒæ•°å­—æ ¼å­
 		for( j=1;j<SIZE;j++){
 			if(Array_judgment[i][j]==Array_judgment[i][j-1]) return 0;
 		}
 	}
-	for( i=0;i<SIZE;i++){ //ÅĞ¶Ï×İÏòÓĞÎŞÁ¬ĞøÏàÍ¬¸ñ×Ó
+	for( i=0;i<SIZE;i++){ //åˆ¤æ–­çºµå‘æœ‰æ— è¿ç»­ç›¸åŒæ ¼å­
 		for( j=1;j<SIZE;j++){
 			if(Array_judgment[j][i]==Array_judgment[j-1][i]) return 0;
 		}
 	}
-	ArrayStatus=1;//±íÊ¾µ±Ç°Êı×éÒÑÂú 
+	ArrayStatus=1;//è¡¨ç¤ºå½“å‰æ•°ç»„å·²æ»¡ 
 	Sleep(150);
 	beginPaint();
 	putImage(&IMAGES.over,25,130);
-	putImage(&IMAGES.restart,225,430);//ÖØÊÔ°´Å¥ 
+	putImage(&IMAGES.restart,225,430);//é‡è¯•æŒ‰é’® 
 	endPaint();
-	registerMouseEvent(mouseEvent);//Êó±êÊÂ¼ş
-	return 1; //ÒÔÉÏÌõ¼ş¶¼²»Âú×ã£¬ÓÎÏ·½áÊø
+	registerMouseEvent(mouseEvent);//é¼ æ ‡äº‹ä»¶
+	return 1; //ä»¥ä¸Šæ¡ä»¶éƒ½ä¸æ»¡è¶³ï¼Œæ¸¸æˆç»“æŸ
 }
-int isWin(int Array_judgment[4][4]){//ÅĞÂú  ²ÎÊı£ºÒª´«ÈëµÄÊı×é 
+int isWin(int Array_judgment[4][4]){//åˆ¤æ»¡  å‚æ•°ï¼šè¦ä¼ å…¥çš„æ•°ç»„ 
 	int i,j;
-	for( i=0;i<SIZE;i++){ //ÅĞ¶ÏÓĞÎŞ¿Õ¸ñ×Ó
+	for( i=0;i<SIZE;i++){ //åˆ¤æ–­æœ‰æ— ç©ºæ ¼å­
 		for( j=0;j<SIZE;j++){
 			if(Array_judgment[i][j]==2048){
-				ArrayStatus=2;//±íÊ¾µ±Ç°ÒÑÊ¤Àû 
+				ArrayStatus=2;//è¡¨ç¤ºå½“å‰å·²èƒœåˆ© 
 				system("pause");
 				Sleep(150);
 				beginPaint();
 				putImage(&IMAGES.win,25,130);
 				putImage(&IMAGES.newgame,225,480);
 				endPaint();
-				registerMouseEvent(mouseEvent);//Êó±êÊÂ¼ş
-				return 1; //ÓÎÏ·Ê¤Àû 
+				registerMouseEvent(mouseEvent);//é¼ æ ‡äº‹ä»¶
+				return 1; //æ¸¸æˆèƒœåˆ© 
 			}
 		}
 	}
 	return 0;
 }
-int operateGame(int Array_direction[4][4],int i){//ÒÆ¶¯º¯Êı£¬Í¨¹ıiÀ´¾ö¶¨ÍùÄÄ¸ö·½ÏòÒÆ¶¯0123·Ö±ğ¶ÔÓ¦ÉÏÏÂ×óÓÒ   ²ÎÊı£ºÒª²Ù×÷µÄÊı×é ¡¢·½Ïò 
+int operateGame(int Array_direction[4][4],int i){//ç§»åŠ¨å‡½æ•°ï¼Œé€šè¿‡iæ¥å†³å®šå¾€å“ªä¸ªæ–¹å‘ç§»åŠ¨0123åˆ†åˆ«å¯¹åº”ä¸Šä¸‹å·¦å³   å‚æ•°ï¼šè¦æ“ä½œçš„æ•°ç»„ ã€æ–¹å‘ 
 	int flag=-1;
 	switch(i){
 		case 0:flag=upMove(Array_direction);break;
@@ -562,19 +562,19 @@ int operateGame(int Array_direction[4][4],int i){//ÒÆ¶¯º¯Êı£¬Í¨¹ıiÀ´¾ö¶¨ÍùÄÄ¸ö·½
 	}
 	return flag;
 }
-int AI(int checker[4][4],int deep){//AIº¯Êı  ´«ÈëÒª²Ù×÷µÄÊı×éÒÔ¼°²½Éî 
-    ++node;  //¾­ÀúµÄ½ÚµãÊı
+int AI(int checker[4][4],int deep){//AIå‡½æ•°  ä¼ å…¥è¦æ“ä½œçš„æ•°ç»„ä»¥åŠæ­¥æ·± 
+    ++node;  //ç»å†çš„èŠ‚ç‚¹æ•°
     int eChecker[4][4];
     if (deep >= depthMAX)
-        return 1;//Í³¼Æµ±Ç°¾ÖÃæµÃ·Ö
+        return 1;//ç»Ÿè®¡å½“å‰å±€é¢å¾—åˆ†
     int i,j;
     int free;
     int tempScore;
     int nowScroe=0;
     int bestScroe = -1;
-    for (i = 0; i < 4; ++i){ 	//³¢ÊÔËÄ¸ö·½Ïò
-        memcpy(eChecker,checker, 16*4);     //¿½±´Ò»·İÔ­Ê¼Êı¾İ½øĞĞÆÀ¹À
-        if (operateGame(Array,i)!=0){     //¸Ã·½Ïò¿ÉÒÔÒÆ¶¯
+    for (i = 0; i < 4; ++i){ 	//å°è¯•å››ä¸ªæ–¹å‘
+        memcpy(eChecker,checker, 16*4);     //æ‹·è´ä¸€ä»½åŸå§‹æ•°æ®è¿›è¡Œè¯„ä¼°
+        if (operateGame(Array,i)!=0){     //è¯¥æ–¹å‘å¯ä»¥ç§»åŠ¨
             tempScore = 0;
             free = 0;
             for (j = 0; j < 16; ++j){
@@ -591,14 +591,14 @@ int AI(int checker[4][4],int deep){//AIº¯Êı  ´«ÈëÒª²Ù×÷µÄÊı×éÒÔ¼°²½Éî
             else tempScore = -99999999;
             if (nowScroe + tempScore > bestScroe){ 
                 bestScroe = nowScroe + tempScore;
-                if (deep == 0)        //ĞŞ¸Ä×îÓÅ·½Ïò
+                if (deep == 0)        //ä¿®æ”¹æœ€ä¼˜æ–¹å‘
                     bestChoose=i;
             }
         }
     }
-    return bestScroe;//×îÓÅµÃ·Ö 
+    return bestScroe;//æœ€ä¼˜å¾—åˆ† 
 }
-int StratAI(int checker[4][4]){//¿ªÊ¼AI²Ù×÷ ´«Èë²ÎÊıÎªĞèÒª²Ù×÷µÄÊı×é 
+int StratAI(int checker[4][4]){//å¼€å§‹AIæ“ä½œ ä¼ å…¥å‚æ•°ä¸ºéœ€è¦æ“ä½œçš„æ•°ç»„ 
     depthMAX = 3;
     int i;
     while (1){
@@ -609,7 +609,7 @@ int StratAI(int checker[4][4]){//¿ªÊ¼AI²Ù×÷ ´«Èë²ÎÊıÎªĞèÒª²Ù×÷µÄÊı×é
         depthMAX += 1;
     }
     operateGame(checker,bestChoose) ;
-    if(isOver(checker)==1)  //¼ì²âÊÇ·ñ½áÊø
-        return 1;//Èç¹ûÂúÁË·µ»Ø1 
-    return 0;//Ã»Âú·µ»Ø0 
+    if(isOver(checker)==1)  //æ£€æµ‹æ˜¯å¦ç»“æŸ
+        return 1;//å¦‚æœæ»¡äº†è¿”å›1 
+    return 0;//æ²¡æ»¡è¿”å›0 
 }
