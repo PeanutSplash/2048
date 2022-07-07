@@ -1,8 +1,7 @@
 /**********************************
 2048小游戏v1.2版本 
 增加了2048AI 游戏胜利界面 
-bug:第三次运行程序时最佳分数会归0 
-作者：刘康鉴
+作者：PeanutSplash
 日期：2022/7/7
 **********************************/
 #include "acllib.h"
@@ -44,7 +43,8 @@ struct images{//图片结构体
 int Array[4][4]={0};//代表2048的二维数组 
 int score=0;//得分 
 int maxScore=-1;//最高得分  
-int ArrayStatus=0;//0表示初始化界面 1为gameover界面 2为胜利界面 
+//int ArrayStatus=0;//0表示初始化界面 1为gameover界面 2为胜利界面 
+int ArrayFlag;//0表示空 1为gameover界面 2为胜利界面
 int depthMAX; //最深长度 
 int node;//节点 
 int bestChoose;//最佳路径 
@@ -86,29 +86,30 @@ void paintNumber(int x,int y,int TextSize,ACL_Color TextColor,ACL_Color TextBkCo
 void paintFrame(){	//初始化界面  
 	int i,j;
 	/*初始化数据*/
-	initConsole ();//启用终端
+//	initConsole ();//启用终端
 	for(i=0;i<SIZE;i++){
 		for(j=0;j<SIZE;j++){
 			Array[i][j]=0;
 		}
 	}
 	score=0;
-	ArrayStatus=0;
+	ArrayFlag=0;
 	getMaxScore();//读取最大得分
 	/*画背景*/ 
 	beginPaint();
 		putImage(&IMAGES.backgound_color,0,0);
     	putImage(&IMAGES.background,25,130);//上半部分150px为计分板，左右25px为两边间隙 
-    	putImage(&IMAGES.score,315,18);//分数方块 
-    	putImage(&IMAGES.bestscore,400,18);//最高分数方块 
+    	putImage(&IMAGES.score,305,18);//分数方块 
+    	putImage(&IMAGES.bestscore,390,18);//最高分数方块 
     endPaint();
     paintNumber(35,5,86,RGB(119,110,101),RGB(251,248,241),"2048");
     paintNumber(30,95,24,RGB(119,110,101),RGB(251,248,241),"合并数字到达2048！");
-    paintNumber(347,52,24,RGB(255,255,254),RGB(188,172,159),"0");
+    paintNumber(270,90,16,RGB(119,110,101),RGB(251,248,241),"使用↑←↓→或wasd控制运动方向");
+    paintNumber(340,110,16,RGB(119,110,101),RGB(251,248,241),"按b开启AI模式");
+    paintNumber(337,52,24,RGB(255,255,254),RGB(188,172,159),"0");
     paintMaxScoreNum();
 	paintBlock();
     paintFirstBlock();
-    printf("ArrayStatus=%d\n",ArrayStatus);
 }
 void paintFirstBlock(){//开局随机生成两个数字方块 
 	int i,j;
@@ -125,15 +126,13 @@ void paintFirstBlock(){//开局随机生成两个数字方块
     paintBlock();
 }
 void keyboardEvent(int key,int event){//绑定键盘事件  参数：按键 键盘事件 
-	int iseffect; //是否为有效操作
- 	printf("ArrayStatus=%d\n",ArrayStatus);   
+	int iseffect; //是否为有效操作  
+	int k,l; 
 	if(event!=KEY_DOWN)
         return;
     if(isOver(Array)){  //判断是否游戏结束，若结束则输出结束信息并退出循环
-    	printf("已满!\n");
 		return;
 	}else if(isWin(Array)){
-		printf("胜利!\n");
 		return;
 	}
     switch(key)
@@ -165,26 +164,23 @@ void timerEvent(int tid){//计时器事件
 	}
 	nextStep();//下一步操作 
 }
-int printArrayNumInConsole(){//输出二维数组的数据在终端 
+int printArrayNumInConsole(){//寻找2048 
 	int i,j;
-	for(i=0;i<4;i++){
-		for(j=0;j<4;j++){
-			//printf("%d\t",Array[i][j]);
+	for(i=0;i<SIZE;i++){
+		for(j=0;j<SIZE;j++){
 			if(Array[i][j]==2048) {//当出现2048返回1 
 				return 1;
 			}
 		}
-		//printf("\n");
 	}
-		//printf("\n");
 }
 void mouseEvent(int x,int y,int bt,int event){//鼠标事件 参数：x坐标 y坐标 按键 事件 
-	if(ArrayStatus==1||ArrayStatus==2){
+	if(ArrayFlag==1||ArrayFlag==2){
 		if(event==BUTTON_DOWN){
 			if(bt==LEFT_BUTTON){
        	 		paintOutNum(x,y);//鼠标点击事件 
       	 	}
- 	   }
+ 	   }    
     	paintDownBlock(x,y);//鼠标移动到某区域事件 
 	}
 }
@@ -198,22 +194,20 @@ int Setup(){
     return 0;
 }
 void paintOutNum(int x,int y){// 点击事件	x坐标y坐标 
-	if(ArrayStatus==1){
+	if(ArrayFlag==1){
 		if(x> 223&&x<314&&y>430&&y<480){//点击重试按钮的区域 
-			printf("重试!\n");
 			paintFrame();//初始化 
 		}
 	}
-	else if(ArrayStatus==2){
+	else if(ArrayFlag==2){
 		if(x> 223&&x<314&&y>480&&y<530){//点击重试按钮的区域 
-			printf("新游戏!\n");
 			paintFrame();//初始化 
 		}
 	}
 }
 void paintDownBlock(int x,int y){//鼠标移动到某区域的事件	参数：x坐标y坐标 
 		beginPaint();
-		if(ArrayStatus==1){
+		if(ArrayFlag==1){
 			if(x>223&&x<314&&y>430&&y<480){//鼠标移动到按钮的区域 
 				putImage(&IMAGES.restart_hover,225,430);//重试按钮(After)
 			}
@@ -221,16 +215,12 @@ void paintDownBlock(int x,int y){//鼠标移动到某区域的事件	参数：x�
 				putImage(&IMAGES.restart,225,430);
 			}
 		} 
-		else if(ArrayStatus==2){
+		else if(ArrayFlag==2){
 			if(x>223&&x<314&&y>480&&y<530){//鼠标移动到按钮的区域 
 				putImage(&IMAGES.newgame_hover,225,480);//新游戏按钮(After)
-//				printf("已绘画新游戏按钮！(After)1919810\n");
-//				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 			else{
 				putImage(&IMAGES.newgame,225,480);//新游戏按钮
-//				printf("已绘画新游戏按钮114514！\n");
-//				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 		}
 			endPaint();
@@ -275,10 +265,13 @@ void outPutNumBlock(int i,int j){//用于根据数字输出对应的数字方块
 }
 void getMaxScore(){//从文件读取最佳分数 
 	char StrLine[20];  //每行最大读取的字符数
-    FILE * fp = fopen("score.txt", "r");
+    FILE *fp;
+	fp = fopen("score.txt", "r");
     fgets(StrLine,sizeof(StrLine),fp);  //读取一行
-    maxScore=atoi(StrLine);
-    return ;
+    if(strlen(StrLine)!=0){//不读取空文件 
+    	maxScore=atoi(StrLine);
+    } 
+    fclose(fp);
 }
 void saveMaxScore(){//保存最大分数到文件 
 	char scoreStr[20];
@@ -335,22 +328,22 @@ void paintScoreNum(){//输出得分数字
 	char str[20];//用于存放转化成字符型的score 
 	itoa(score, str, 10);//score转化成字符型存入str 10进制 
    	switch (getNumDigits(score)){//不同位数画的起始位置不一样 
-   		case 1:paintNumber(347,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
-		case 2:paintNumber(342,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
-		case 3:paintNumber(335,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
-		case 4:paintNumber(329,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
-		case 5:paintNumber(322,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
+   		case 1:paintNumber(337,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
+		case 2:paintNumber(332,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
+		case 3:paintNumber(325,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
+		case 4:paintNumber(319,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
+		case 5:paintNumber(312,52,24,RGB(255,255,254),RGB(188,172,159),str);break;
    	}
 }
 void paintMaxScoreNum(){//输出最大得分数字 
 	char str1[20];//用于存放转化成字符型的maxScore 
 	itoa(maxScore, str1, 10);//score转化成字符型存入str1 10进制 
 	switch (getNumDigits(maxScore)){//画最高得分的 
-   		case 1:paintNumber(460,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
-		case 2:paintNumber(455,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
-		case 3:paintNumber(448,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
-		case 4:paintNumber(442,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
-		case 5:paintNumber(435,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
+   		case 1:paintNumber(450,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
+		case 2:paintNumber(445,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
+		case 3:paintNumber(438,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
+		case 4:paintNumber(432,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
+		case 5:paintNumber(425,52,24,RGB(255,255,254),RGB(188,172,159),str1);break;
    	}
 } 
 void controlInEachUnit(int *unit){//对数组进行加和推格	
@@ -520,13 +513,12 @@ int isOver(int Array_judgment[4][4]){//判满  参数：要传入的数组
 			if(Array_judgment[j][i]==Array_judgment[j-1][i]) return 0;
 		}
 	}
-	ArrayStatus=1;//表示当前数组已满 
+	ArrayFlag=1;//表示当前数组已满 
 	Sleep(150);
 	beginPaint();
 	putImage(&IMAGES.over,25,130);
 	putImage(&IMAGES.restart,225,430);//重试按钮 
 	endPaint();
-//	registerMouseEvent(mouseEvent);//鼠标事件
 	return 1; //以上条件都不满足，游戏结束
 }
 int isWin(int Array_judgment[4][4]){//判满  参数：要传入的数组 
@@ -535,21 +527,12 @@ int isWin(int Array_judgment[4][4]){//判满  参数：要传入的数组
 	for( i=0;i<SIZE;i++){ //判断有无空格子
 		for( j=0;j<SIZE;j++){
 			if(Array[i][j]==2048){
-				printf("Array[%d][%d]=%d\n",i,j,Array[i][j]);
-					for( k=0;k<SIZE;k++){
-						for( l=0;l<SIZE;l++){
-							printf("%d\t",Array[k][l]);
-						}
-						printf("\n"); 
-					}
-					printf("\n"); 
-				//ArrayStatus=2;//表示当前已胜利 
+				ArrayFlag=2;//表示当前已胜利 
 				Sleep(150);
 				beginPaint();
 				putImage(&IMAGES.win,25,130);
 				putImage(&IMAGES.newgame,225,480);
 				endPaint();
-				registerMouseEvent(mouseEvent);//鼠标事件
 				return 1; //游戏胜利 
 			}
 		}
