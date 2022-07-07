@@ -2,7 +2,7 @@
 2048小游戏v1.2版本 
 增加了2048AI 游戏胜利界面 
 bug:第三次运行程序时最佳分数会归0 
-作者：PeanutSplash
+作者：刘康鉴
 日期：2022/7/7
 **********************************/
 #include "acllib.h"
@@ -108,6 +108,7 @@ void paintFrame(){	//初始化界面
     paintMaxScoreNum();
 	paintBlock();
     paintFirstBlock();
+    printf("ArrayStatus=%d\n",ArrayStatus);
 }
 void paintFirstBlock(){//开局随机生成两个数字方块 
 	int i,j;
@@ -125,7 +126,8 @@ void paintFirstBlock(){//开局随机生成两个数字方块
 }
 void keyboardEvent(int key,int event){//绑定键盘事件  参数：按键 键盘事件 
 	int iseffect; //是否为有效操作
-    if(event!=KEY_DOWN)
+ 	printf("ArrayStatus=%d\n",ArrayStatus);   
+	if(event!=KEY_DOWN)
         return;
     if(isOver(Array)){  //判断是否游戏结束，若结束则输出结束信息并退出循环
     	printf("已满!\n");
@@ -192,6 +194,7 @@ int Setup(){
     paintFrame();
     registerKeyboardEvent(keyboardEvent);//键盘事件  
     registerTimerEvent(timerEvent);//计时器 
+    registerMouseEvent(mouseEvent);//鼠标事件
     return 0;
 }
 void paintOutNum(int x,int y){// 点击事件	x坐标y坐标 
@@ -221,13 +224,13 @@ void paintDownBlock(int x,int y){//鼠标移动到某区域的事件	参数：x�
 		else if(ArrayStatus==2){
 			if(x>223&&x<314&&y>480&&y<530){//鼠标移动到按钮的区域 
 				putImage(&IMAGES.newgame_hover,225,480);//新游戏按钮(After)
-				printf("已绘画新游戏按钮！(After)\n");
-				printf("ArrayStatus=%d\n",ArrayStatus);
+//				printf("已绘画新游戏按钮！(After)1919810\n");
+//				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 			else{
 				putImage(&IMAGES.newgame,225,480);//新游戏按钮
-				printf("已绘画新游戏按钮！\n");
-				printf("ArrayStatus=%d\n",ArrayStatus);
+//				printf("已绘画新游戏按钮114514！\n");
+//				printf("ArrayStatus=%d\n",ArrayStatus);
 			}
 		}
 			endPaint();
@@ -500,13 +503,6 @@ int rightMove(int Array_right[4][4]){//向右移动	参数：要操作的数组
 	}
 	return 0;//无效返回0 
 }
-//void paintWin(){//胜利界面 
-//	beginPaint();
-//	putImage(&IMAGES.win,25,130);
-//	putImage(&IMAGES.restart,225,430);//重试按钮 
-//	endPaint();
-//	ArrayStatus=2;//第二种情况 
-//}
 int isOver(int Array_judgment[4][4]){//判满  参数：要传入的数组 
 	int i,j;
 	for( i=0;i<SIZE;i++){ //判断有无空格子
@@ -530,16 +526,24 @@ int isOver(int Array_judgment[4][4]){//判满  参数：要传入的数组
 	putImage(&IMAGES.over,25,130);
 	putImage(&IMAGES.restart,225,430);//重试按钮 
 	endPaint();
-	registerMouseEvent(mouseEvent);//鼠标事件
+//	registerMouseEvent(mouseEvent);//鼠标事件
 	return 1; //以上条件都不满足，游戏结束
 }
 int isWin(int Array_judgment[4][4]){//判满  参数：要传入的数组 
 	int i,j;
+	int k,l;
 	for( i=0;i<SIZE;i++){ //判断有无空格子
 		for( j=0;j<SIZE;j++){
-			if(Array_judgment[i][j]==2048){
-				ArrayStatus=2;//表示当前已胜利 
-				system("pause");
+			if(Array[i][j]==2048){
+				printf("Array[%d][%d]=%d\n",i,j,Array[i][j]);
+					for( k=0;k<SIZE;k++){
+						for( l=0;l<SIZE;l++){
+							printf("%d\t",Array[k][l]);
+						}
+						printf("\n"); 
+					}
+					printf("\n"); 
+				//ArrayStatus=2;//表示当前已胜利 
 				Sleep(150);
 				beginPaint();
 				putImage(&IMAGES.win,25,130);
